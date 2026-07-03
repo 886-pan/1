@@ -2,20 +2,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
 COPY package.json package-lock.json* ./
+RUN npm ci
 
-# Install dependencies
-RUN npm ci --only=production
+COPY . .
+RUN npm run build:client
 
-# Copy built files
-COPY api/server.js ./api/
-COPY api/*.json ./api/
-COPY dist ./dist
-COPY uploads ./uploads
+RUN mkdir -p /app/api/data /app/api/uploads
 
-# Expose port
 EXPOSE 3001
 
-# Start server
-CMD ["node", "api/server.js"]
+CMD ["npx", "tsx", "api/server.ts"]

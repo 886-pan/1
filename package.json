@@ -9,7 +9,7 @@
     "server": "tsx watch api/index.ts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build",
-    "build:server": "tsc api/server.ts --outDir api --esModuleInterop --module ESNext --target ES2020 --moduleResolution node --skipLibCheck",
+    "build:server": "tsc -p tsconfig.server.json",
     "start": "node api/server.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -25,6 +25,7 @@
     "react-router-dom": "^6.15.0",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
+    "tsx": "^3.12.7",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
