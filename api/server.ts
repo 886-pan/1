@@ -44,6 +44,47 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static(UPLOAD_DIR));
 
+// SEO 相关路由
+app.get('/robots.txt', (req, res) => {
+  const siteUrl = `${req.protocol}://${req.get('host')}`;
+  res.type('text/plain');
+  res.send(`User-agent: *
+Allow: /
+Sitemap: ${siteUrl}/sitemap.xml
+`);
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  const siteUrl = `${req.protocol}://${req.get('host')}`;
+  const store = loadUserStore();
+  const pageUrls = Object.keys(store.pages).map(id => `  <url>
+    <loc>${siteUrl}/page/${id}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`).join('\n');
+
+  res.type('application/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${siteUrl}</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${siteUrl}/login</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>${siteUrl}/register</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+${pageUrls}
+</urlset>`);
+});
+
 // 静态文件服务 - 生产环境
 const distPath = path.join(__dirname, '..', 'dist');
 if (fs.existsSync(distPath)) {

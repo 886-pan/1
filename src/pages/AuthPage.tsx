@@ -15,6 +15,7 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
+    document.title = '登录 - Hi小呈同学';
     checkHasUsers().then((exists) => {
       setHasUsers(exists);
       if (!exists) {

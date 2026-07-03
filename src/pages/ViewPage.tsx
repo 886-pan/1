@@ -36,6 +36,7 @@ export default function ViewPage() {
     try {
       const page = await getPage(pageId);
       setInfo(page.data);
+      document.title = `${page.data.name} - Hi小呈同学`;
     } catch (error) {
       showToast('页面不存在', 'error');
       navigate('/');

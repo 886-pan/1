@@ -13,6 +13,7 @@ export default function Landing() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    document.title = '首页 - Hi小呈同学';
     loadPages();
   }, []);
 
