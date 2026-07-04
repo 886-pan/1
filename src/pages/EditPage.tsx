@@ -13,7 +13,9 @@ export default function EditPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [showAvatarMenu, setShowAvatarMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     document.title = '编辑资料 - Hi小呈同学';
@@ -71,7 +73,17 @@ export default function EditPage() {
   };
 
   const handleAvatarUpload = () => {
+    setShowAvatarMenu(true);
+  };
+
+  const handleChooseFromAlbum = () => {
+    setShowAvatarMenu(false);
     fileInputRef.current?.click();
+  };
+
+  const handleTakePhoto = () => {
+    setShowAvatarMenu(false);
+    cameraInputRef.current?.click();
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,6 +147,14 @@ export default function EditPage() {
         ref={fileInputRef}
         type="file"
         accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+      />
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
         onChange={handleFileChange}
         className="hidden"
       />
@@ -314,6 +334,42 @@ export default function EditPage() {
 
         <div className="h-24" />
       </div>
+
+      {/* 头像选择菜单 */}
+      {showAvatarMenu && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center"
+          onClick={() => setShowAvatarMenu(false)}
+        >
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-md p-4 pb-8 animate-slideUp"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-gray-800 rounded-2xl overflow-hidden">
+              <button
+                onClick={handleTakePhoto}
+                className="w-full py-4 text-white text-center hover:bg-white/5 transition-colors border-b border-white/10"
+              >
+                <Camera className="w-5 h-5 inline mr-2" />
+                拍照
+              </button>
+              <button
+                onClick={handleChooseFromAlbum}
+                className="w-full py-4 text-white text-center hover:bg-white/5 transition-colors"
+              >
+                �️ 从相册/文件选择
+              </button>
+            </div>
+            <button
+              onClick={() => setShowAvatarMenu(false)}
+              className="w-full mt-3 py-4 bg-gray-800 rounded-2xl text-white font-medium hover:bg-white/5 transition-colors"
+            >
+              取消
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-md border-t border-white/10 p-4">
         <button
